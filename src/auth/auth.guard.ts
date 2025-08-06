@@ -3,7 +3,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { CanActivate, ExecutionContext, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
-import ApiError from "src/error/apiError";
+import ApiError from "src/errors/apiError";
 import { ROLES_KEY } from "src/roles/roles.decorator";
 import { Reflector } from "@nestjs/core";
 config();

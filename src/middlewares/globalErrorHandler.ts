@@ -3,9 +3,11 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from "@nestjs/common";
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
-import handleClientError from "src/error/handleClientError";
+import handleClientError from "src/errors/handleClientError";
 import { IGenericErrorMessage } from "src/interfaces/common";
-import ApiError from "src/error/apiError";
+import ApiError from "src/errors/apiError";
+import handleZodError from "src/errors/handleZodError";
+import { ZodError } from "zod";
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -18,7 +20,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let message = "Something went wrong!";
     let errorMessages: IGenericErrorMessage[] = [];
 
-    if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+    if (exception instanceof ZodError) {
+      const simplifiedError = handleZodError(exception);
+      statusCode = simplifiedError.statusCode;
+      message = simplifiedError.message;
+      errorMessages = simplifiedError.errorMessages;
+    } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       const simplified = handleClientError(exception);
       statusCode = simplified.statusCode;
       message = simplified.message;

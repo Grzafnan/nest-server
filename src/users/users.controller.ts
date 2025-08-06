@@ -9,6 +9,7 @@ import {
   UseGuards,
   Res,
   HttpStatus,
+  UsePipes,
 } from "@nestjs/common";
 import { Response } from "express";
 import { UsersService } from "./users.service";
@@ -17,12 +18,15 @@ import { AuthGuard } from "src/auth/auth.guard";
 import sendResponse from "src/shared/sendResponse";
 import { Roles } from "src/roles/roles.decorator";
 import { ENUM_USER_ROLE } from "src/enums/user";
+import { UserValidation } from "./users.dto";
+import { ValidationRequest } from "src/middlewares/validateRequest";
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @UsePipes(new ValidationRequest(UserValidation.create))
   async create(@Body() user: User, @Res() res: Response): Promise<void> {
     const result = await this.usersService.create(user);
 
