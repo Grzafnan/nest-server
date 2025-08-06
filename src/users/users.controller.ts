@@ -49,6 +49,12 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(
+    ENUM_USER_ROLE.SUPER_ADMIN,
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.USER,
+    ENUM_USER_ROLE.CLIENT,
+  )
   @Get("/:id")
   async findOne(@Param("id") id: string, @Res() res: Response): Promise<void> {
     const result = await this.usersService.findOne(id);
@@ -62,6 +68,12 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(
+    ENUM_USER_ROLE.SUPER_ADMIN,
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.USER,
+    ENUM_USER_ROLE.CLIENT,
+  )
   @Patch("/:id")
   async update(
     @Param("id") id: string,
@@ -79,6 +91,12 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(
+    ENUM_USER_ROLE.SUPER_ADMIN,
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.USER,
+    ENUM_USER_ROLE.CLIENT,
+  )
   @Delete("/:id")
   async remove(@Param("id") id: string, @Res() res: Response): Promise<void> {
     const result = await this.usersService.remove(id);
