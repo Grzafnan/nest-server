@@ -1,13 +1,14 @@
-import { NestFactory } from "@nestjs/core";
+import express, { Request, Response } from "express";
+import cors from "cors";
+import path from "path";
+import config from "./config";
 import { AppModule } from "./app.module";
+import { NestFactory } from "@nestjs/core";
+import { HttpStatus } from "@nestjs/common";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { GlobalExceptionFilter } from "./common/filters/globalErrorHandler";
 import { ExpressAdapter } from "@nestjs/platform-express";
 import cookieParser from "cookie-parser";
-import cors from "cors";
-import express from "express";
-import path from "path";
-import config from "./config";
 
 export async function app(): Promise<NestExpressApplication> {
   const server = express();
@@ -40,6 +41,10 @@ export async function app(): Promise<NestExpressApplication> {
   // Global configurations
   app.setGlobalPrefix("api/v1");
   app.useGlobalFilters(new GlobalExceptionFilter());
+
+  app.use((req: Request, res: Response) => {
+    res.status(HttpStatus.NOT_FOUND).render("not-found");
+  });
 
   return app;
 }
