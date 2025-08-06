@@ -1,33 +1,90 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Res,
+  HttpStatus,
+} from "@nestjs/common";
+import { Response } from "express";
 import { UsersService } from "./users.service";
 import { Prisma, User } from "@prisma/client";
+import { AuthGuard } from "src/auth/auth.guard";
+import sendResponse from "src/shared/sendResponse";
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() user: User) {
-    return this.usersService.create(user);
+  async create(@Body() user: User, @Res() res: Response): Promise<void> {
+    const result = await this.usersService.create(user);
+
+    sendResponse<User>(res, {
+      statusCode: HttpStatus.CREATED,
+      success: true,
+      message: "User created successfully!",
+      data: result,
+    });
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @UseGuards(AuthGuard)
+  @Get("/")
+  async findAll(@Res() res: Response): Promise<void> {
+    const result = await this.usersService.findAll();
+
+    sendResponse<User[]>(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: "Users retrieved successfully!",
+      data: result,
+    });
   }
 
+  @UseGuards(AuthGuard)
   @Get("/:id")
-  findOne(@Param("id") id: string): Promise<User | null> {
-    return this.usersService.findOne(id);
+  async findOne(@Param("id") id: string, @Res() res: Response): Promise<void> {
+    const result = await this.usersService.findOne(id);
+
+    sendResponse<User | null>(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: "User retrieved successfully!",
+      data: result,
+    });
   }
 
+  @UseGuards(AuthGuard)
   @Patch("/:id")
-  update(@Param("id") id: string, @Body() user: Prisma.UserUpdateInput): Promise<User | null> {
-    return this.usersService.update(id, user);
+  async update(
+    @Param("id") id: string,
+    @Body() user: Prisma.UserUpdateInput,
+    @Res() res: Response,
+  ): Promise<void> {
+    const result = await this.usersService.update(id, user);
+
+    sendResponse<User | null>(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: "User updated successfully!",
+      data: result,
+    });
   }
 
+  @UseGuards(AuthGuard)
   @Delete("/:id")
-  remove(@Param("id") id: string): Promise<User | null> {
-    return this.usersService.remove(id);
+  async remove(@Param("id") id: string, @Res() res: Response): Promise<void> {
+    const result = await this.usersService.remove(id);
+
+    sendResponse<User | null>(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: "User removed successfully!",
+      data: result,
+    });
   }
 }

@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, User } from "@prisma/client";
 import * as bcrypt from "bcrypt";
+import ApiError from "src/error/apiError";
 
 @Injectable()
 export class UsersService {
@@ -10,8 +11,8 @@ export class UsersService {
   async create(data: Prisma.UserCreateInput): Promise<User> {
     const { password, ...rest } = data;
 
-    if (!password || typeof password !== "string") {
-      throw new BadRequestException("Password is required and must be a string!");
+    if (!password) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, "Password is required and must be a string!");
     }
 
     const hashedPassword: string = await bcrypt.hash(password, 10);
@@ -24,8 +25,8 @@ export class UsersService {
     });
   }
 
-  findAll() {
-    return this.prisma.user.findMany();
+  async findAll() {
+    return await this.prisma.user.findMany();
   }
 
   async findOne(id: string): Promise<User | null> {
@@ -33,7 +34,7 @@ export class UsersService {
       where: { id },
     });
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found!`);
+      throw new ApiError(HttpStatus.NOT_FOUND, `User with id ${id} not found!`);
     }
     return user;
   }
@@ -44,7 +45,7 @@ export class UsersService {
     });
 
     if (!existingUser) {
-      throw new NotFoundException(`User with id ${id} not found to update!`);
+      throw new ApiError(HttpStatus.NOT_FOUND, `User with id ${id} not found to update!`);
     }
 
     return this.prisma.user.update({
@@ -59,7 +60,7 @@ export class UsersService {
     });
 
     if (!existingUser) {
-      throw new NotFoundException(`User with id ${id} not found to delete!`);
+      throw new ApiError(HttpStatus.NOT_FOUND, `User with id ${id} not found to delete!`);
     }
 
     return this.prisma.user.delete({

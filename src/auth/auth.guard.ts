@@ -1,10 +1,9 @@
+import { config } from "dotenv";
 import { JwtPayload } from "jsonwebtoken";
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { jwtConstants } from "./constants";
 import { Request } from "express";
-
-// Extend Express Request type to include `user`
+config();
 interface AuthenticatedRequest extends Request {
   user?: JwtPayload;
 }
@@ -21,7 +20,7 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const payload: JwtPayload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
+        secret: process.env.JWT_SECRET,
       });
       request["user"] = payload;
     } catch {

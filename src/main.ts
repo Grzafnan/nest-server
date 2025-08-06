@@ -1,14 +1,14 @@
 import { config } from "dotenv";
-import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
+import { GlobalExceptionFilter } from "./middlewares/globalErrorHandler";
 
-config(); // Load env variables at the top
+config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new GlobalExceptionFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
 

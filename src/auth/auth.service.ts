@@ -17,14 +17,14 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException("User not found!");
     }
-    const { id, password: userPass, ...rest } = user;
+    const { password: userPass, ...rest } = user;
     const isPasswordValid: boolean = await bcrypt.compare(password, userPass);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException("Invalid email or password");
     }
 
-    const payload = { ...rest, sub: id };
+    const payload = { ...rest, sub: user.id };
 
     return {
       access_token: await this.jwtService.signAsync(payload),
