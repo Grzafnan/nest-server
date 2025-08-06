@@ -1,31 +1,51 @@
 import { config } from "dotenv";
 import { JwtPayload } from "jsonwebtoken";
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
+import ApiError from "src/error/apiError";
+import { ROLES_KEY } from "src/roles/roles.decorator";
+import { Reflector } from "@nestjs/core";
 config();
 interface AuthenticatedRequest extends Request {
-  user?: JwtPayload;
+  user?: JwtPayload & { role?: string };
 }
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new ApiError(HttpStatus.UNAUTHORIZED, "Authorization token is missing or invalid!");
     }
     try {
-      const payload: JwtPayload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET,
+      const payload: JwtPayload & { role?: string } = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_SECRET as string,
       });
       request["user"] = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new ApiError(HttpStatus.UNAUTHORIZED, "Invalid authorization token!");
     }
+
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (requiredRoles && requiredRoles.length > 0) {
+      const userRole = request.user?.role;
+
+      if (!userRole || !requiredRoles.includes(userRole)) {
+        throw new ApiError(HttpStatus.FORBIDDEN, "Access denied: insufficient role.");
+      }
+    }
+
     return true;
   }
 

@@ -15,6 +15,8 @@ import { UsersService } from "./users.service";
 import { Prisma, User } from "@prisma/client";
 import { AuthGuard } from "src/auth/auth.guard";
 import sendResponse from "src/shared/sendResponse";
+import { Roles } from "src/roles/roles.decorator";
+import { ENUM_USER_ROLE } from "src/enums/user";
 
 @Controller("users")
 export class UsersController {
@@ -33,6 +35,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN)
   @Get("/")
   async findAll(@Res() res: Response): Promise<void> {
     const result = await this.usersService.findAll();
