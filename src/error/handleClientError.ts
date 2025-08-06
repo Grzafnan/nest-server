@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { HttpStatus } from "@nestjs/common";
-import { IGenericErrorMessage } from "src/interfaces/common";
+import { IGenericErrorMessage } from "src/common/interfaces/common";
 
 const handleClientError = (
   error: Prisma.PrismaClientKnownRequestError,

@@ -2,7 +2,7 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import handleClientError from "src/errors/handleClientError";
-import { IGenericErrorMessage } from "src/interfaces/common";
+import { IGenericErrorMessage } from "src/common/interfaces/common";
 import ApiError from "src/errors/apiError";
 import handleZodError from "src/errors/handleZodError";
 import { ZodError } from "zod";

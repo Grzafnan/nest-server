@@ -2,7 +2,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
-import { User } from "src/users/users.decorator";
+import { User } from "src/modules/users/users.decorator";
 
 @Controller("/auth")
 export class AuthController {
