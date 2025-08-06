@@ -6,12 +6,12 @@ import { Response } from "express";
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
+  @Get("/")
   getHello(@Res() res: Response): void {
     res.render("home");
   }
 
-  @Get("*")
+  @Get("*path")
   notFound(@Res() res: Response): void {
     res.render("not-found");
   }
