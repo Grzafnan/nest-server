@@ -41,16 +41,5 @@ export async function app(): Promise<NestExpressApplication> {
   app.setGlobalPrefix("api/v1");
   app.useGlobalFilters(new GlobalExceptionFilter());
 
-  server.get("/api/v1", (req: Request, res: Response): void => {
-    res.render("home", {
-      title: "Home",
-      message: "Hello from EJS in NestJS 🎉",
-    });
-  });
-
-  server.use((req: Request, res: Response) => {
-    res.render("not-found");
-  });
-
   return app;
 }
