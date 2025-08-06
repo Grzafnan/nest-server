@@ -16,7 +16,7 @@ export class ValidationRequest<T> implements PipeTransform {
         )
         .filter((field) => field)
         .join(", ");
-      throw new ApiError(HttpStatus.BAD_REQUEST, `Validation failed for fields: ${formatted}`);
+      throw new ApiError(HttpStatus.BAD_REQUEST, `Body Validation failed for fields: ${formatted}`);
     }
     return result.data;
   }

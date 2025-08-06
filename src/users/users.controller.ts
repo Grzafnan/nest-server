@@ -19,7 +19,7 @@ import sendResponse from "src/shared/sendResponse";
 import { Roles } from "src/roles/roles.decorator";
 import { ENUM_USER_ROLE } from "src/enums/user";
 import { UserValidation } from "./users.dto";
-import { ValidationRequest } from "src/middlewares/validateRequest";
+import { ValidationRequest } from "src/common/pipes/validateRequest.pipe";
 
 @Controller("users")
 export class UsersController {

@@ -1,5 +1,3 @@
-// src/common/filters/global-exception.filter.ts
-
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from "@nestjs/common";
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
