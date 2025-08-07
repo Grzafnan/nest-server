@@ -16,11 +16,14 @@ import { User } from "src/app/modules/users/users.decorator";
 import sendResponse from "src/shared/sendResponse";
 import { Request, Response } from "express";
 import config from "src/config";
+import { Public } from "./auth.decorator";
+// import the Public decorator from the correct location
 
 @Controller("/auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post("/login")
   async signIn(
