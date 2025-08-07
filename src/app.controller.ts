@@ -11,8 +11,8 @@ export class AppController {
     res.render("home");
   }
 
-  @Get("*path")
-  notFound(@Res() res: Response): void {
-    res.render("not-found");
-  }
+  // @Get("*path")
+  // notFound(@Res() res: Response): void {
+  //   res.render("not-found");
+  // }
 }

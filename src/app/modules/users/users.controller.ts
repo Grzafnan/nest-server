@@ -30,7 +30,7 @@ export class UsersController {
   async create(@Body() user: User, @Res() res: Response): Promise<void> {
     const result = await this.usersService.create(user);
 
-    sendResponse<User>(res, {
+    sendResponse<Partial<User>>(res, {
       statusCode: HttpStatus.CREATED,
       success: true,
       message: "User created successfully!",
@@ -44,7 +44,7 @@ export class UsersController {
   async findAll(@Res() res: Response): Promise<void> {
     const result = await this.usersService.findAll();
 
-    sendResponse<User[]>(res, {
+    sendResponse<Partial<User>[]>(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: "Users retrieved successfully!",
@@ -63,7 +63,7 @@ export class UsersController {
   async findOne(@Param("id") id: string, @Res() res: Response): Promise<void> {
     const result = await this.usersService.findOne(id);
 
-    sendResponse<User | null>(res, {
+    sendResponse<Partial<User> | null>(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: "User retrieved successfully!",
@@ -86,7 +86,7 @@ export class UsersController {
   ): Promise<void> {
     const result = await this.usersService.update(id, user);
 
-    sendResponse<User | null>(res, {
+    sendResponse<Partial<User> | null>(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: "User updated successfully!",
@@ -105,7 +105,7 @@ export class UsersController {
   async remove(@Param("id") id: string, @Res() res: Response): Promise<void> {
     const result = await this.usersService.remove(id);
 
-    sendResponse<User | null>(res, {
+    sendResponse<Partial<User> | null>(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: "User removed successfully!",

@@ -8,7 +8,7 @@ import ApiError from "src/errors/apiError";
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: Prisma.UserCreateInput): Promise<User> {
+  async create(data: Prisma.UserCreateInput): Promise<Partial<User>> {
     const { password, ...rest } = data;
 
     if (!password) {
@@ -22,16 +22,44 @@ export class UsersService {
         ...rest,
         password: hashedPassword,
       },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
-  async findAll() {
-    return await this.prisma.user.findMany();
+  async findAll(): Promise<Partial<User>[]> {
+    return await this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
   }
 
-  async findOne(id: string): Promise<User | null> {
+  async findOne(id: string): Promise<Partial<User> | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
     if (!user) {
       throw new ApiError(HttpStatus.NOT_FOUND, `User with id ${id} not found!`);
@@ -39,7 +67,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, user: Prisma.UserUpdateInput): Promise<User | null> {
+  async update(id: string, user: Prisma.UserUpdateInput): Promise<Partial<User> | null> {
     const existingUser = await this.prisma.user.findUnique({
       where: { id },
     });
@@ -51,10 +79,18 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: user,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
-  async remove(id: string): Promise<User | null> {
+  async remove(id: string): Promise<Partial<User> | null> {
     const existingUser = await this.prisma.user.findUnique({
       where: { id },
     });
@@ -65,6 +101,14 @@ export class UsersService {
 
     return this.prisma.user.delete({
       where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 }

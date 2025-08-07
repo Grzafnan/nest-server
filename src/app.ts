@@ -18,6 +18,7 @@ export async function app(): Promise<NestExpressApplication> {
 
   // Set EJS as view engine
   app.setViewEngine("ejs");
+  app.set("trust proxy", "loopback"); // Trust requests from the loopback address
 
   // Set views folder based on environment
   if (config.env === "production") {
