@@ -14,7 +14,7 @@ import {
 import { Response } from "express";
 import { UsersService } from "./users.service";
 import { Prisma, User } from "@prisma/client";
-import { AuthGuard } from "src/modules/auth/auth.guard";
+import { AuthGuard } from "src/app/modules/auth/auth.guard";
 import sendResponse from "src/shared/sendResponse";
 import { Roles } from "src/roles/roles.decorator";
 import { ENUM_USER_ROLE } from "src/enums/user";
