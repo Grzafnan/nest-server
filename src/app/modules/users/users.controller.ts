@@ -16,7 +16,7 @@ import { UsersService } from "./users.service";
 import { Prisma, User } from "@prisma/client";
 import { AuthGuard } from "src/app/modules/auth/auth.guard";
 import sendResponse from "src/shared/sendResponse";
-import { Roles } from "src/roles/roles.decorator";
+import { Roles } from "src/common/decorators/roles.decorator";
 import { ENUM_USER_ROLE } from "src/enums/user";
 import { UserValidation } from "./users.dto";
 import { ValidationRequest } from "src/common/pipes/validateRequest.pipe";

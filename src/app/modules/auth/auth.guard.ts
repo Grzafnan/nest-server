@@ -4,7 +4,7 @@ import { CanActivate, ExecutionContext, HttpStatus, Injectable } from "@nestjs/c
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import ApiError from "src/errors/apiError";
-import { ROLES_KEY } from "src/roles/roles.decorator";
+import { ROLES_KEY } from "src/common/decorators/roles.decorator";
 import { Reflector } from "@nestjs/core";
 config();
 interface AuthenticatedRequest extends Request {
