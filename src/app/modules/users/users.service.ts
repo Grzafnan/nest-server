@@ -45,8 +45,6 @@ export class UsersService {
   }> {
     const { page, limit, skip } = paginationHelpers.calculatePagination(paginationOptions);
     const { searchTerm, ...filterData } = filters;
-    console.log("Filters:", searchTerm, filters);
-    console.log("Pagination Options:", paginationOptions);
 
     const stringSearchableFields: (keyof Prisma.UserWhereInput)[] = ["name", "email"];
 
@@ -119,14 +117,6 @@ export class UsersService {
             : {
                 createdAt: "desc",
               },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          createdAt: true,
-          updatedAt: true,
-        },
       });
 
       const total: number = await tx.user.count({
@@ -144,15 +134,10 @@ export class UsersService {
 
   async findOne(id: string): Promise<Partial<User> | null> {
     const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
+      omit: {
+        password: true,
       },
+      where: { id },
     });
     if (!user) {
       throw new ApiError(HttpStatus.NOT_FOUND, `User with id ${id} not found!`);
@@ -172,14 +157,6 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: user,
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
     });
   }
 
@@ -194,14 +171,6 @@ export class UsersService {
 
     return this.prisma.user.delete({
       where: { id },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
     });
   }
 }
