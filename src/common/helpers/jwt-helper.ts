@@ -1,16 +1,16 @@
-import jwt, { JwtPayload, Secret } from "jsonwebtoken";
+import { JwtService } from "@nestjs/jwt";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-const createToken = (
+const createToken = async (
   payload: Record<string, unknown>,
-  secret: Secret,
+  secret: string,
   expireTime: string,
-): string => {
-  return jwt.sign(payload, secret, {
-    expiresIn: expireTime,
-  });
+): Promise<string> => {
+  const jwtService = new JwtService({ secret });
+  return await jwtService.signAsync(payload, { expiresIn: expireTime });
 };
 
-const verifyToken = (token: string, secret: Secret): JwtPayload => {
+const verifyToken = (token: string, secret: string): JwtPayload => {
   return jwt.verify(token, secret) as JwtPayload;
 };
 
