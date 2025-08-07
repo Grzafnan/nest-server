@@ -69,7 +69,6 @@ export class UsersController {
   @Roles(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN)
   @Get("/")
   async findAll(@Req() req: Request, @Res() res: Response, @Query() query: any): Promise<void> {
-    console.log("Request Query:", query);
     const filters = pick(query, FilterableFields);
     const paginationOptions: IPaginationOptions = pick(
       query,
