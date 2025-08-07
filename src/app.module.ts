@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { UsersModule } from "./app/modules/users/users.module";
 import { PrismaModule } from "./app/modules/prisma/prisma.module";
 import { AuthModule } from "./app/modules/auth/auth.module";
@@ -23,6 +22,6 @@ import { APP_GUARD } from "@nestjs/core";
     }),
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
